@@ -1,0 +1,61 @@
+Title: Live Content
+Description: Fetched live
+Source: https://docs.qloo.com/reference/api-overview
+---
+API Overview
+Insights API
+Use the Insights API to generate taste-driven recommendations, audience insights, and analysis across supported data categories. You can use it to power recommendations, compare audience preferences, and tailor results by location.
+The API is parameter-driven, so the entities, tags, demographics, audiences, and location values you include determine the results you get. Use these resources to design and test requests effectively:
+Insights API Deep Dive
+: Test your requests live and explore how parameter combinations shape results. The Deep Dive page is especially useful when you want to experiment with parameter behavior before implementation and see example requests and responses in real-time.
+Parameter Overview
+: Understand how to choose and format parameters for your request use case.
+Parameter Reference
+: Full definitions of all available parameters, including descriptions, types, and details.
+Entity Type Parameter Guide
+: See which parameters are supported for each
+filter.type
+, including whether they are required or optional.
+Key Use Cases
+Recommendation Insights
+Get top recommendations for any entity type
+Demographic Insights
+See how different audiences align with an entity or tag
+Heatmaps
+Visualize geographic affinity data
+Location-Based Insights
+Tailor results by geography
+Taste Analysis
+Retrieve metadata and taste-related tags
+Supporting APIs
+Qloo provides additional APIs to complement Insights by helping you discover valid input values, analyze trends, and compare entities or audiences. These APIs are organized into two functional groups:
+Lookup APIs
+Use these APIs to search for and validate IDs you can pass as parameters to Insights.
+Search Entities
+: Search for entity IDs by name
+Search Entities by ID
+: Search for entities by ID
+Get Audiences
+: Search for audiences
+Get Audience Types
+: List available audience types
+Search Tags
+: Search for tags
+Get Tag Types
+: Retrieve available tag types by entity category
+Analysis & Trends APIs
+Use these APIs to analyze, compare, and monitor entity or audience performance over time.
+Analysis Compare
+: Analyze and compare two groups of entities.
+Get Trending Data
+: Get time-series data showing the popularity trends of a specific entity over a given time period.
+Updated
+7 months ago
+Did this page help you?
+Yes
+No
+Updated
+7 months ago
+Did this page help you?
+Yes
+No

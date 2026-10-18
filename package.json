@@ -1,0 +1,32 @@
+{
+  "name": "sponsormatch-ai",
+  "version": "1.0.0",
+  "description": "SponsorMatch AI — Qloo Agentic Hackathon Entry. Evidence-backed event sponsorship discovery via Qloo's taste graph.",
+  "private": true,
+  "scripts": {
+    "postinstall": "npm install --prefix server && npm install --prefix client",
+    "build:server": "npm run build --prefix server",
+    "build:client": "npm run build --prefix client",
+    "build": "npm run build:client && npm run build:server",
+    "server": "npm run dev --prefix server",
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently -n \"server,client\" -c \"cyan,magenta\" \"npm run server\" \"npm run client\"",
+    "start": "npm run start --prefix server",
+    "eval": "npx tsx eval/benchmark.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "tsx": "^4.19.3",
+    "typescript": "^5.7.3"
+  },
+  "keywords": [
+    "qloo",
+    "hackathon",
+    "sponsorship",
+    "agentic-ai",
+    "taste-graph",
+    "recommendations"
+  ],
+  "author": "SponsorMatch Contributors",
+  "license": "MIT"
+}

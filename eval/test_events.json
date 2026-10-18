@@ -1,0 +1,83 @@
+[
+  {
+    "id": "t1-desert-daze",
+    "name": "Desert Daze Festival",
+    "entities": ["The Black Angels", "King Gizzard & The Lizard Wizard"],
+    "city": "Lake Perris, CA",
+    "category": "Indie / Psych Festival",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t2-sonar-barcelona",
+    "name": "Sónar Barcelona",
+    "entities": ["Bicep", "Aphex Twin"],
+    "city": "Barcelona, Spain",
+    "category": "Electronic & Creative Tech",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t3-chicago-marathon",
+    "name": "Chicago Marathon",
+    "entities": ["Eliud Kipchoge"],
+    "city": "Chicago, IL",
+    "category": "World Major Athletics",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t4-red-rocks-jam",
+    "name": "Red Rocks Jam Session",
+    "entities": ["Billy Strings"],
+    "venue": "Red Rocks Amphitheatre",
+    "city": "Morrison, CO",
+    "category": "Bluegrass / Outdoor Amphitheatre",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t5-austin-city-limits",
+    "name": "Austin City Limits Music Festival",
+    "entities": ["Foo Fighters", "Kendrick Lamar"],
+    "city": "Austin, TX",
+    "category": "Mainstream Multi-Genre Festival",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t6-monaco-grand-prix",
+    "name": "Monaco Grand Prix Weekend",
+    "entities": ["Max Verstappen", "Lewis Hamilton"],
+    "city": "Monaco",
+    "category": "Motorsport / Luxury Lifestyle",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t7-pitchfork-fest",
+    "name": "Pitchfork Music Festival",
+    "entities": ["Big Thief", "The Smile"],
+    "city": "Chicago, IL",
+    "category": "Alternative / Indie Critics",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t8-brooklyn-half",
+    "name": "RBC Brooklyn Half Marathon",
+    "entities": ["New York Road Runners"],
+    "city": "Brooklyn, NY",
+    "category": "Community Urban Endurance",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t9-niche-ambient-gala",
+    "name": "Hudson Valley Ambient Sound Series",
+    "entities": ["Brian Eno", "Tim Hecker"],
+    "city": "Hudson, NY",
+    "category": "Niche Experimental / Ambient",
+    "expectedAbstention": false
+  },
+  {
+    "id": "t10-fake-empty-event",
+    "name": "Unknown Ghost Gathering 2099",
+    "entities": ["XyzQrt99FakeBandNotFound12345"],
+    "city": "Nowhere, XX",
+    "category": "Thin Data / Adversarial Test",
+    "expectedAbstention": true
+  }
+]
