@@ -4,25 +4,45 @@
 
 @layer base {
   body {
+    background-color: #08080A;
+    color: #F1F5F9;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
   code, pre {
     font-family: 'JetBrains Mono', monospace;
   }
 }
 
-/* Custom scrollbar */
+/* Custom Posh-styled dark scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #08080A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 3px;
+  background: #1E202B;
+  border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #2E3245;
+}
+
+/* Neon glow helper utilities */
+.neon-border-cyan {
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 20px -3px rgba(0, 240, 255, 0.15);
+}
+
+.neon-border-emerald {
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 20px -3px rgba(16, 185, 129, 0.15);
+}
+
+.glass-card {
+  background: rgba(16, 17, 22, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }

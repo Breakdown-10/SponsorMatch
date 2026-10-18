@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BrandCandidate, ConfidenceTier } from '../types';
-import { Zap, ShieldCheck, Sparkles, Filter, Eye, Ban, ThumbsDown, Star } from 'lucide-react';
+import { Zap, ShieldCheck, Sparkles, Filter, Eye, ThumbsDown, Star } from 'lucide-react';
 
 interface BrandTableProps {
   candidates: BrandCandidate[];
@@ -46,20 +46,20 @@ export const BrandTable: React.FC<BrandTableProps> = ({
     switch (confidence) {
       case 'HIGH':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono">
             <ShieldCheck className="w-3 h-3" />
             HIGH CONF
           </span>
         );
       case 'MEDIUM':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30 font-mono">
             MED CONF
           </span>
         );
       case 'LOW':
         return (
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-500/20 text-slate-400 border border-slate-500/30">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20 font-mono">
             LOW CONF
           </span>
         );
@@ -67,35 +67,35 @@ export const BrandTable: React.FC<BrandTableProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-      {/* Header and Filter Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+    <div className="bg-[#101116] border border-white/[0.08] rounded-2xl p-6 shadow-2xl space-y-4">
+      {/* Header and Capsule Filter Controls */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold text-slate-100">
+            <h2 className="text-sm font-black text-white uppercase tracking-wider">
               Ranked Sponsor Matches ({filtered.length})
             </h2>
-            <span className="text-[10px] font-semibold px-2 py-0.5 bg-brand-500/20 text-brand-300 border border-brand-500/30 rounded-md">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 rounded-md">
               Lift Normalized
             </span>
           </div>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <p className="text-xs text-slate-400 mt-1">
             Log-scale popularity normalized against general brand fame to highlight genuine audience lift
           </p>
         </div>
 
-        {/* Filter Switch */}
+        {/* Posh Capsule Segmented Filter Switch */}
         <div className="flex items-center gap-2">
-          <div className="inline-flex p-1 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+          <div className="inline-flex p-1 rounded-xl bg-[#0A0B10] border border-white/[0.08] text-xs">
             <button
               onClick={() => setFilterType('NON_OBVIOUS')}
               className={`px-3 py-1.5 rounded-lg font-bold flex items-center gap-1.5 transition-all ${
                 activeFilter === 'NON_OBVIOUS'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-glow-cyan'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Sparkles className="w-3 h-3 text-amber-400" />
+              <Sparkles className="w-3 h-3 text-cyan-400" />
               <span>Non-Obvious High-Lift ({candidates.filter((c) => !c.isObvious && c.status === 'VALIDATED').length})</span>
             </button>
 
@@ -103,8 +103,8 @@ export const BrandTable: React.FC<BrandTableProps> = ({
               onClick={() => setFilterType('ALL')}
               className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeFilter === 'ALL'
-                  ? 'bg-brand-600 text-white shadow-sm'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-white/10 text-white border border-white/20'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               All Brands ({candidates.length})
@@ -114,8 +114,8 @@ export const BrandTable: React.FC<BrandTableProps> = ({
               onClick={() => setFilterType('OBVIOUS')}
               className={`px-3 py-1.5 rounded-lg font-bold transition-all ${
                 activeFilter === 'OBVIOUS'
-                  ? 'bg-slate-800 text-slate-200'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-slate-800 text-slate-200 border border-slate-700'
+                  : 'text-slate-400 hover:text-white'
               }`}
             >
               Obvious Staples ({candidates.filter((c) => c.isObvious).length})
@@ -128,7 +128,7 @@ export const BrandTable: React.FC<BrandTableProps> = ({
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead>
-            <tr className="border-b border-slate-800 text-slate-400 font-semibold uppercase tracking-wider text-[11px]">
+            <tr className="border-b border-white/[0.06] bg-[#0A0B10]/70 text-slate-400 font-mono uppercase text-[10px]">
               <th className="py-3 px-3">#</th>
               <th className="py-3 px-3">Brand & Category</th>
               <th className="py-3 px-3">Cultural Lift Ratio</th>
@@ -139,7 +139,7 @@ export const BrandTable: React.FC<BrandTableProps> = ({
               <th className="py-3 px-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800/60">
+          <tbody className="divide-y divide-white/[0.04]">
             {filtered.map((brand, idx) => {
               const isSelected = selectedBrandId === brand.id;
               const isExcluded = brand.status === 'EXCLUDED';
@@ -150,10 +150,10 @@ export const BrandTable: React.FC<BrandTableProps> = ({
                   onClick={() => onSelectBrand(brand)}
                   className={`group cursor-pointer transition-colors ${
                     isSelected
-                      ? 'bg-brand-950/50 hover:bg-brand-950/70 border-l-2 border-brand-500'
+                      ? 'bg-cyan-950/25 hover:bg-cyan-950/35 border-l-2 border-l-cyan-400'
                       : isExcluded
-                      ? 'bg-red-950/10 text-slate-500 hover:bg-red-950/20 opacity-60'
-                      : 'hover:bg-slate-800/40'
+                      ? 'bg-red-950/10 text-slate-500 hover:bg-red-950/20 opacity-50'
+                      : 'hover:bg-[#14151E]'
                   }`}
                 >
                   {/* Rank */}
@@ -163,10 +163,10 @@ export const BrandTable: React.FC<BrandTableProps> = ({
 
                   {/* Brand & Category */}
                   <td className="py-3.5 px-3">
-                    <div className="font-bold text-slate-100 group-hover:text-brand-300 transition-colors flex items-center gap-1.5">
+                    <div className="font-bold text-white group-hover:text-cyan-300 transition-colors flex items-center gap-1.5">
                       <span>{brand.name}</span>
                       {!brand.isObvious && brand.status === 'VALIDATED' && (
-                        <Star className="w-3 h-3 text-amber-400 fill-amber-400/20" />
+                        <Star className="w-3 h-3 text-cyan-400 fill-cyan-400/20" />
                       )}
                     </div>
                     <div className="text-[11px] text-slate-400">{brand.category}</div>
@@ -177,14 +177,14 @@ export const BrandTable: React.FC<BrandTableProps> = ({
 
                   {/* Lift Multiple */}
                   <td className="py-3.5 px-3">
-                    <div className="inline-flex items-center gap-1 font-mono font-extrabold text-xs px-2 py-0.5 rounded-lg bg-amber-500/10 text-amber-300 border border-amber-500/30">
-                      <Zap className="w-3 h-3 text-amber-400 fill-amber-400" />
+                    <div className="inline-flex items-center gap-1 font-mono font-black text-xs px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                      <Zap className="w-3 h-3 text-cyan-400 fill-cyan-400" />
                       <span>{brand.liftMultiple}x Lift</span>
                     </div>
                   </td>
 
                   {/* Raw Affinity */}
-                  <td className="py-3.5 px-3 font-mono font-bold text-slate-300">
+                  <td className="py-3.5 px-3 font-mono font-bold text-slate-200">
                     {Math.round(brand.rawAffinity * 100)}%
                   </td>
 
@@ -196,11 +196,11 @@ export const BrandTable: React.FC<BrandTableProps> = ({
                   {/* Classification */}
                   <td className="py-3.5 px-3">
                     {brand.isObvious ? (
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-white/[0.04] text-slate-400 border border-white/[0.08]">
                         Obvious Giant
                       </span>
                     ) : (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
                         Non-Obvious Fit
                       </span>
                     )}
@@ -214,7 +214,7 @@ export const BrandTable: React.FC<BrandTableProps> = ({
                     <div className="inline-flex items-center gap-1.5" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onSelectBrand(brand)}
-                        className="px-2.5 py-1 text-[11px] font-semibold bg-brand-600/80 hover:bg-brand-600 text-white rounded-lg flex items-center gap-1 shadow-sm transition-colors"
+                        className="px-3 py-1 text-[11px] font-black bg-gradient-to-r from-cyan-400 to-emerald-400 hover:from-cyan-300 hover:to-emerald-300 text-black rounded-lg flex items-center gap-1 shadow-glow-cyan transition-all"
                         title="View custom CMO pitch letter & activations"
                       >
                         <Eye className="w-3 h-3" />
@@ -223,7 +223,7 @@ export const BrandTable: React.FC<BrandTableProps> = ({
 
                       <button
                         onClick={() => onRejectBrand(brand)}
-                        className="p-1 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-950/40 transition-colors"
+                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
                         title="Reject brand (Triggers closed-loop re-ranking)"
                       >
                         <ThumbsDown className="w-3.5 h-3.5" />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { PipelineStage } from '../types';
-import { CheckCircle2, CircleDashed, AlertTriangle, Terminal } from 'lucide-react';
+import { CheckCircle2, CircleDashed, AlertTriangle, Terminal, Zap } from 'lucide-react';
 
 interface StageTrackerProps {
   currentStage: PipelineStage;
@@ -51,75 +51,75 @@ export const StageTracker: React.FC<StageTrackerProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-lg space-y-3">
+    <div className="bg-[#101116] border border-white/[0.08] rounded-2xl p-4 sm:p-5 shadow-2xl space-y-3.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {currentStage === 'COMPLETED' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-glow" />
           ) : isAbstained ? (
             <AlertTriangle className="w-4 h-4 text-amber-400" />
           ) : (
-            <CircleDashed className="w-4 h-4 text-brand-400 animate-spin" />
+            <Zap className="w-4 h-4 text-cyan-400 animate-pulse" />
           )}
-          <span className="text-xs font-bold text-slate-200">
+          <span className="text-xs font-black uppercase tracking-wider text-white">
             {currentStage === 'COMPLETED'
               ? 'Pipeline Execution Complete'
               : isAbstained
-              ? 'Agent Abstained (Thin Data)'
-              : 'Taste Graph Traversal in Progress'}
+              ? 'Agent Grounding Halt'
+              : `Executing Stage: ${currentStage.replace('_', ' ')}`}
           </span>
         </div>
 
-        <span className="text-xs font-mono font-bold text-brand-400">{progress}%</span>
+        <div className="flex items-center gap-2">
+          {activeCall && (
+            <span className="hidden sm:inline-flex items-center gap-1 font-mono text-[11px] text-cyan-400 bg-cyan-950/40 border border-cyan-800/50 px-2 py-0.5 rounded-lg">
+              <Terminal className="w-3 h-3" />
+              {activeCall}
+            </span>
+          )}
+          <span className="text-xs font-black text-cyan-400 font-mono">{progress}%</span>
+        </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="w-full bg-slate-950 rounded-full h-1.5 overflow-hidden">
+      {/* Progress Bar with neon gradient glow */}
+      <div className="w-full bg-[#14151E] rounded-full h-2 overflow-hidden border border-white/[0.04]">
         <div
-          className={`h-full transition-all duration-300 rounded-full ${
+          className={`h-full transition-all duration-300 ${
             isAbstained
-              ? 'bg-amber-400'
-              : currentStage === 'COMPLETED'
-              ? 'bg-emerald-400'
-              : 'bg-gradient-to-r from-brand-600 to-indigo-500'
+              ? 'bg-amber-500'
+              : 'bg-gradient-to-r from-cyan-400 via-teal-400 to-emerald-400 shadow-glow-cyan'
           }`}
-          style={{ width: `${Math.max(5, progress)}%` }}
+          style={{ width: `${progress}%` }}
         />
       </div>
 
-      {/* Stage Steps */}
+      {/* 8-Stage Pill List */}
       <div className="grid grid-cols-4 sm:grid-cols-8 gap-1.5 pt-1">
-        {STAGES.map((s) => {
-          const status = getStageStatus(s.key);
+        {STAGES.map((st) => {
+          const status = getStageStatus(st.key);
           return (
             <div
-              key={s.key}
-              className={`px-2 py-1.5 rounded-lg text-center text-[10px] font-semibold border transition-all ${
+              key={st.key}
+              className={`py-1.5 px-2 rounded-lg text-center text-[10px] font-mono font-bold tracking-tight transition-all border ${
                 status === 'completed'
-                  ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/50'
+                  ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30'
                   : status === 'active'
-                  ? 'bg-brand-950 text-brand-300 border-brand-500/80 shadow-sm shadow-brand-500/20'
+                  ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/50 shadow-glow-cyan'
                   : status === 'abstained'
-                  ? 'bg-amber-950/40 text-amber-300 border-amber-800/50'
-                  : 'bg-slate-950/50 text-slate-500 border-slate-800'
+                  ? 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                  : 'bg-[#14151E]/60 text-slate-500 border-white/[0.04]'
               }`}
             >
-              {s.label}
+              {st.label}
             </div>
           );
         })}
       </div>
 
-      {/* Live Status Message & Current Qloo API Call */}
-      <div className="pt-1 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs border-t border-slate-800/60">
-        <span className="text-slate-300 font-medium truncate">{statusMessage}</span>
-        {activeCall && (
-          <span className="inline-flex items-center gap-1 font-mono text-[11px] text-cyan-300 bg-cyan-950/60 border border-cyan-800/50 px-2 py-0.5 rounded shrink-0">
-            <Terminal className="w-3 h-3 text-cyan-400" />
-            {activeCall}
-          </span>
-        )}
-      </div>
+      {/* Status Message */}
+      <p className="text-[11px] text-slate-400 font-medium">
+        {statusMessage}
+      </p>
     </div>
   );
 };

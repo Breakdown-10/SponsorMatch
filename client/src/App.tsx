@@ -8,6 +8,7 @@ import { PitchViewer } from './components/PitchViewer';
 import { EvidenceTrace } from './components/EvidenceTrace';
 import { BaselineModal } from './components/BaselineModal';
 import { RejectModal } from './components/RejectModal';
+import { EventHeroKPI } from './components/EventHeroKPI';
 import { exportRunToMarkdown } from './utils/export';
 import {
   EventInput,
@@ -145,7 +146,7 @@ export const App: React.FC = () => {
   const selectedPitch = selectedBrandId ? activeRun?.pitches[selectedBrandId] : undefined;
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 font-sans pb-16">
+    <div className="min-h-screen flex flex-col bg-[#08080A] text-slate-100 font-sans pb-20 selection:bg-cyan-500/20 selection:text-cyan-300">
       {/* Header */}
       <Header
         evidenceCount={activeRun?.evidenceRecords.length || 0}
@@ -161,15 +162,15 @@ export const App: React.FC = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8 flex-1 w-full">
         {/* Hero Value Statement */}
-        <div className="text-center max-w-3xl mx-auto space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-brand-500/10 text-brand-300 border border-brand-500/30">
-            <Sparkles className="w-3.5 h-3.5 text-brand-400" />
-            <span>Qloo Agentic Hackathon Entry</span>
+        <div className="text-center max-w-3xl mx-auto space-y-3 pt-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <span>Qloo Agentic AI Hackathon Entry</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
             Discover Non-Obvious Event Sponsors Backed by Verified Taste Data
           </h1>
-          <p className="text-sm text-slate-400 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-normal">
             Move past generic demographic decks. SponsorMatch traverses Qloo’s multi-hop taste graph across
             music, dining, fashion, and lifestyle to identify high-lift sponsor matches with 100% auditable evidence.
           </p>
@@ -219,6 +220,17 @@ export const App: React.FC = () => {
         {/* Active Results Display */}
         {activeRun && !activeRun.abstention?.isAbstained && activeRun.candidates.length > 0 && (
           <div className="space-y-8 animate-in fade-in duration-300">
+            {/* Posh Event Header & High-Contrast 4-Up KPI Grid */}
+            <EventHeroKPI
+              run={activeRun}
+              topCandidate={selectedCandidate || activeRun.candidates[0]}
+              onOpenEvidence={() => {
+                setHighlightEvidenceId(undefined);
+                setIsEvidenceOpen(true);
+              }}
+              onOpenBaseline={() => setIsBaselineOpen(true)}
+            />
+
             {/* Cross-Domain Audience Taste Profile */}
             <TasteProfile tasteProfile={activeRun.tasteProfile} />
 

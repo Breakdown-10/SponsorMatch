@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { EvidenceRecord, PipelineStage } from '../types';
+import { EvidenceRecord } from '../types';
 import {
   Database,
   X,
@@ -10,8 +10,7 @@ import {
   ChevronRight,
   ShieldCheck,
   Search,
-  Filter,
-  Layers
+  Filter
 } from 'lucide-react';
 
 interface EvidenceTraceProps {
@@ -34,7 +33,6 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
   useEffect(() => {
     if (highlightId) {
       setExpandedId(highlightId);
-      // Ensure the highlighted item is visible by resetting filters if needed
       const item = evidenceRecords.find((e) => e.id === highlightId);
       if (item && stageFilter !== 'ALL' && item.stage !== stageFilter) {
         setStageFilter('ALL');
@@ -84,11 +82,11 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
       role="dialog"
       aria-modal="true"
       aria-label="Qloo Evidence Trace"
-      className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm transition-all"
+      className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-md transition-all"
     >
-      <div className="w-full max-w-2xl bg-slate-900 border-l border-slate-800 h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
+      <div className="w-full max-w-2xl bg-[#101116] border-l border-white/[0.08] h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 bg-slate-950/80 space-y-3">
+        <div className="p-5 border-b border-white/[0.06] bg-[#08080A]/90 space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="p-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
@@ -96,8 +94,8 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base font-bold text-white">Qloo Evidence Trace</h3>
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
+                  <h3 className="text-sm font-black text-white uppercase tracking-wider">Qloo Evidence Trace</h3>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                     {evidenceRecords.length} Queries Logged
                   </span>
                 </div>
@@ -109,7 +107,7 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/[0.06] transition-colors"
               title="Close (Esc)"
             >
               <X className="w-5 h-5" />
@@ -125,7 +123,7 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search endpoints, parameters, or entity IDs..."
-                className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-colors"
+                className="w-full bg-[#0A0B10] border border-white/[0.08] rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-cyan-400 transition-colors"
               />
               {searchQuery && (
                 <button
@@ -143,10 +141,10 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                 <button
                   key={st.key}
                   onClick={() => setStageFilter(st.key)}
-                  className={`px-2.5 py-1 rounded-lg font-semibold shrink-0 transition-colors ${
+                  className={`px-2.5 py-1 rounded-lg font-bold shrink-0 transition-colors ${
                     stageFilter === st.key
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-sm'
-                      : 'bg-slate-950/60 text-slate-400 border border-slate-800 hover:text-slate-200'
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-glow-cyan'
+                      : 'bg-[#0A0B10] text-slate-400 border border-white/[0.06] hover:text-white'
                   }`}
                 >
                   {st.label}
@@ -167,8 +165,8 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                 id={`evidence-${ev.id}`}
                 className={`rounded-xl border transition-all ${
                   highlightId === ev.id
-                    ? 'border-cyan-500 bg-cyan-950/20 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-500/50'
-                    : 'border-slate-800 bg-slate-950/60 hover:border-slate-700'
+                    ? 'border-cyan-400 bg-cyan-950/20 shadow-glow-cyan ring-1 ring-cyan-500/50'
+                    : 'border-white/[0.06] bg-[#14151E] hover:border-white/[0.12]'
                 }`}
               >
                 <div
@@ -177,21 +175,21 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                 >
                   <div className="flex items-center gap-2.5">
                     <span className="font-mono text-xs font-bold text-slate-400">#{index + 1}</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-slate-800 text-slate-300 border border-slate-700">
+                    <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#0A0B10] text-slate-300 border border-white/[0.08]">
                       {ev.toolName}
                     </span>
-                    <span className="text-xs font-semibold text-slate-200 truncate max-w-[280px]">
+                    <span className="text-xs font-bold text-white truncate max-w-[280px]">
                       {ev.resultSummary}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {ev.cacheHit ? (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                         Cache Hit
                       </span>
                     ) : (
-                      <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/30">
+                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
                         Live API
                       </span>
                     )}
@@ -204,12 +202,12 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                 </div>
 
                 {isExpanded && (
-                  <div className="p-3.5 pt-0 border-t border-slate-800/80 text-xs space-y-2.5 mt-1 font-mono">
+                  <div className="p-3.5 pt-0 border-t border-white/[0.04] text-xs space-y-2.5 mt-1 font-mono">
                     <div>
                       <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">
                         Endpoint & Method:
                       </div>
-                      <div className="p-2 rounded bg-slate-900 border border-slate-800 text-cyan-300 break-all">
+                      <div className="p-2 rounded-lg bg-[#0A0B10] border border-white/[0.06] text-cyan-300 break-all">
                         {ev.endpoint}
                       </div>
                     </div>
@@ -218,7 +216,7 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                       <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">
                         Redacted Parameters:
                       </div>
-                      <pre className="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[11px] overflow-x-auto">
+                      <pre className="p-2.5 rounded-lg bg-[#0A0B10] border border-white/[0.06] text-slate-300 text-[11px] overflow-x-auto">
                         {JSON.stringify(ev.redactedParams, null, 2)}
                       </pre>
                     </div>
@@ -228,7 +226,7 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                         <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">
                           Verified Output Snippet:
                         </div>
-                        <pre className="p-2.5 rounded bg-slate-900 border border-slate-800 text-slate-300 text-[11px] overflow-x-auto max-h-48">
+                        <pre className="p-2.5 rounded-lg bg-[#0A0B10] border border-white/[0.06] text-slate-300 text-[11px] overflow-x-auto max-h-48">
                           {JSON.stringify(ev.rawSnippet, null, 2)}
                         </pre>
                       </div>
@@ -261,14 +259,14 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/80 text-[11px] text-slate-400 flex items-center justify-between">
-          <span className="flex items-center gap-1.5 text-emerald-400 font-medium">
+        <div className="p-4 border-t border-white/[0.06] bg-[#08080A]/90 text-[11px] text-slate-400 flex items-center justify-between">
+          <span className="flex items-center gap-1.5 text-emerald-400 font-semibold font-mono">
             <ShieldCheck className="w-4 h-4" />
             100% of numerical claims traceable to Qloo API
           </span>
           <button
             onClick={onClose}
-            className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold"
+            className="px-3.5 py-1.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.12] text-white text-xs font-bold"
           >
             Close Trace
           </button>

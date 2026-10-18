@@ -1,6 +1,6 @@
 import React from 'react';
 import { TasteDomain, TasteAffinity } from '../types';
-import { Music, Utensils, Shirt, Film } from 'lucide-react';
+import { Music, Utensils, Shirt, Film, Sparkles } from 'lucide-react';
 
 interface TasteProfileProps {
   tasteProfile: Record<TasteDomain, TasteAffinity[]>;
@@ -8,35 +8,31 @@ interface TasteProfileProps {
 
 const DOMAIN_CONFIG: Record<
   TasteDomain,
-  { label: string; icon: React.ElementType; color: string; bg: string; border: string }
+  { label: string; icon: React.ElementType; color: string; badgeBg: string }
 > = {
   music: {
     label: 'Music & Sonic Identity',
     icon: Music,
-    color: 'text-violet-400',
-    bg: 'bg-violet-950/30',
-    border: 'border-violet-800/40',
+    color: 'text-cyan-400',
+    badgeBg: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/30',
   },
   dining: {
     label: 'Dining, Venues & Nightlife',
     icon: Utensils,
     color: 'text-amber-400',
-    bg: 'bg-amber-950/30',
-    border: 'border-amber-800/40',
+    badgeBg: 'bg-amber-500/10 text-amber-300 border-amber-500/30',
   },
   fashion: {
     label: 'Fashion & Aesthetic Style',
     icon: Shirt,
     color: 'text-emerald-400',
-    bg: 'bg-emerald-950/30',
-    border: 'border-emerald-800/40',
+    badgeBg: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/30',
   },
   media: {
     label: 'Media, Zines & Culture',
     icon: Film,
-    color: 'text-sky-400',
-    bg: 'bg-sky-950/30',
-    border: 'border-sky-800/40',
+    color: 'text-purple-400',
+    badgeBg: 'bg-purple-500/10 text-purple-300 border-purple-500/30',
   },
 };
 
@@ -47,64 +43,68 @@ export const TasteProfile: React.FC<TasteProfileProps> = ({ tasteProfile }) => {
   if (!hasAffinities) return null;
 
   return (
-    <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+    <div className="bg-[#101116] border border-white/[0.08] rounded-2xl p-6 shadow-2xl space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-white/[0.06] pb-4">
         <div>
-          <h2 className="text-base font-bold text-slate-100">Cross-Domain Audience Taste Profile</h2>
-          <p className="text-xs text-slate-400 mt-0.5">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse-glow" />
+            <h2 className="text-sm font-black text-white uppercase tracking-wider">
+              Cross-Domain Audience Taste Profile
+            </h2>
+          </div>
+          <p className="text-xs text-slate-400 mt-1">
             Verified cultural affinities surfaced across Qloo’s entity taste graph (Aggregate Subculture Analysis)
           </p>
         </div>
-        <span className="text-[11px] font-semibold px-2 py-0.5 bg-brand-500/10 text-brand-300 border border-brand-500/30 rounded-lg">
+        <span className="text-[10px] font-mono font-bold px-2.5 py-1 bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 rounded-lg self-start sm:self-auto">
           Qloo Multi-Hop Graph
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {domains.map((domain) => {
-          const cfg = DOMAIN_CONFIG[domain];
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        {domains.map((dom) => {
+          const cfg = DOMAIN_CONFIG[dom];
+          const affinities = tasteProfile[dom] || [];
           const Icon = cfg.icon;
-          const affinities = tasteProfile[domain] || [];
 
           return (
             <div
-              key={domain}
-              className={`rounded-xl p-4 border ${cfg.bg} ${cfg.border} space-y-3 flex flex-col justify-between`}
+              key={dom}
+              className="bg-[#14151E] border border-white/[0.08] hover:border-cyan-500/30 rounded-xl p-4 space-y-3 transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <div className={`p-1.5 rounded-lg bg-slate-900/60 ${cfg.color}`}>
-                    <Icon className="w-4 h-4" />
+                <div className="flex items-center justify-between pb-2.5 border-b border-white/[0.05]">
+                  <div className="flex items-center gap-2">
+                    <Icon className={`w-4 h-4 ${cfg.color}`} />
+                    <h3 className="text-xs font-bold text-white">{cfg.label}</h3>
                   </div>
-                  <h3 className="text-xs font-bold text-slate-200">{cfg.label}</h3>
                 </div>
 
-                <div className="space-y-2 mt-3">
-                  {affinities.slice(0, 4).map((aff) => {
-                    const scorePct = Math.round(aff.affinityScore * 100);
-                    return (
-                      <div key={aff.id} className="text-xs">
-                        <div className="flex justify-between items-center text-slate-300 mb-1">
-                          <span className="truncate pr-2 font-medium">{aff.name}</span>
-                          <span className="font-mono text-[11px] font-bold text-slate-400 shrink-0">
-                            {scorePct}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-slate-950/80 rounded-full h-1 overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-brand-500 to-indigo-400 rounded-full"
-                            style={{ width: `${scorePct}%` }}
-                          />
-                        </div>
+                <div className="space-y-2.5 mt-3">
+                  {affinities.slice(0, 4).map((aff, i) => (
+                    <div key={i} className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-slate-300 truncate max-w-[170px]" title={aff.name}>
+                          {aff.name}
+                        </span>
+                        <span className="font-mono text-[11px] font-bold text-cyan-400">
+                          {Math.round(aff.affinityScore * 100)}%
+                        </span>
                       </div>
-                    );
-                  })}
+                      <div className="w-full bg-[#0A0B10] h-1.5 rounded-full overflow-hidden border border-white/[0.04]">
+                        <div
+                          className="h-full bg-gradient-to-r from-cyan-400 to-emerald-400 rounded-full"
+                          style={{ width: `${Math.round(aff.affinityScore * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
               {affinities.length === 0 && (
-                <div className="text-[11px] text-slate-500 italic py-2">
-                  Inferring lifestyle signals...
+                <div className="text-[11px] text-slate-500 py-4 text-center italic">
+                  Thin domain signals
                 </div>
               )}
             </div>
