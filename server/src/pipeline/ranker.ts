@@ -35,19 +35,21 @@ export class Ranker {
         confidence = 'LOW';
       }
 
+      const matchScore = Math.round(rawAffinity * 100);
+
       return {
         ...c,
         liftMultiple,
         isObvious,
         confidence,
-        status: 'VALIDATED' as const
+        status: 'VALIDATED' as const,
+        matchScore
       };
     });
 
-    // Primary sort: Non-obvious high-lift brands first, followed by affinity
+    // Primary sort: by matchScore descending
     scored.sort((a, b) => {
-      // Prioritize high lift
-      return b.liftMultiple - a.liftMultiple;
+      return (b.matchScore || 0) - (a.matchScore || 0);
     });
 
     const nonObviousCount = scored.filter(s => !s.isObvious && s.liftMultiple >= 1.35).length;

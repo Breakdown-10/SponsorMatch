@@ -63,7 +63,9 @@ export class BrandFinder {
         confidence: 'HIGH', // derived in Ranker
         status: 'VALIDATED',
         evidenceIds: [resp.evidence.id],
-        keyAffinities: [cat],
+        keyAffinities: item.subTags || [cat],
+        tagline: item.tagline,
+        subTags: item.subTags,
         explainabilityFactors
       });
     }

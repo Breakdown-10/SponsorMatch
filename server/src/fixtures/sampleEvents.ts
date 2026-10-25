@@ -11,6 +11,22 @@ export interface SampleEventDefinition {
 
 export const SAMPLE_EVENTS: SampleEventDefinition[] = [
   {
+    id: 'sonar-barcelona',
+    name: 'Sónar Barcelona 2026',
+    tagline: 'Advanced Music & Creative Technology',
+    genre: 'Electronic, Modular Synth, Creative AI',
+    description: 'Electronic music, digital art and innovation across multiple venues in Barcelona\'s Fira Gran Via.',
+    input: {
+      eventName: 'Sónar Barcelona 2026',
+      entities: ['Bicep', 'Aphex Twin'],
+      venue: 'Fira Gran Via',
+      city: 'Barcelona, Spain',
+      budgetTier: 'PREMIUM',
+      excludedCategories: [],
+      excludedBrands: []
+    }
+  },
+  {
     id: 'desert-daze',
     name: 'Desert Daze Festival 2026',
     tagline: 'Psychedelic Rock & Avant-Garde Arts',
@@ -23,22 +39,6 @@ export const SAMPLE_EVENTS: SampleEventDefinition[] = [
       city: 'Lake Perris, CA',
       budgetTier: 'MID',
       excludedCategories: ['Energy Drink'],
-      excludedBrands: []
-    }
-  },
-  {
-    id: 'sonar-barcelona',
-    name: 'Sónar Festival Barcelona 2026',
-    tagline: 'Advanced Music & Creative Technology',
-    genre: 'Electronic, Modular Synth, Creative AI',
-    description: 'A pioneering European electronic festival uniting club culture, modular synthesizer innovators, audiovisual installations, and digital art.',
-    input: {
-      eventName: 'Sónar Barcelona 2026',
-      entities: ['Bicep', 'Aphex Twin'],
-      venue: 'Fira Gran Via',
-      city: 'Barcelona, Spain',
-      budgetTier: 'PREMIUM',
-      excludedCategories: [],
       excludedBrands: []
     }
   },

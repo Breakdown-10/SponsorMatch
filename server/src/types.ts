@@ -67,6 +67,9 @@ export interface BrandCandidate {
   evidenceIds: string[];
   keyAffinities: string[];
   explainabilityFactors?: { inputEntityName: string; score: number }[];
+  matchScore?: number;
+  tagline?: string;
+  subTags?: string[];
 }
 
 export interface ActivationConcept {
@@ -76,6 +79,7 @@ export interface ActivationConcept {
   footprint: string;
   costTier: '$' | '$$' | '$$$' | '$$$$';
   linkedAffinities: string[];
+  imageUrl?: string;
 }
 
 export interface EvidenceFootnote {

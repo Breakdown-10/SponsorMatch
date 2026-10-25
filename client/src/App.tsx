@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Header } from './components/Header';
-import { EventForm } from './components/EventForm';
-import { StageTracker } from './components/StageTracker';
-import { TasteProfile } from './components/TasteProfile';
-import { BrandTable } from './components/BrandTable';
-import { PitchViewer } from './components/PitchViewer';
+import { Sidebar } from './components/Sidebar';
+import { TopNavbar } from './components/TopNavbar';
+import { HeroEventBanner } from './components/HeroEventBanner';
+import { TopSponsorMatches } from './components/TopSponsorMatches';
+import { AudienceAffinityOverview } from './components/AudienceAffinityOverview';
+import { SponsorRecommendationsTable } from './components/SponsorRecommendationsTable';
+import { SidebarWidgets } from './components/SidebarWidgets';
+import { BrandPitchSection } from './components/BrandPitchSection';
+import { FooterBanner } from './components/FooterBanner';
 import { EvidenceTrace } from './components/EvidenceTrace';
 import { BaselineModal } from './components/BaselineModal';
 import { RejectModal } from './components/RejectModal';
-import { EventHeroKPI } from './components/EventHeroKPI';
+import { CustomEventModal } from './components/CustomEventModal';
 import { exportRunToMarkdown } from './utils/export';
 import {
   EventInput,
@@ -16,24 +19,19 @@ import {
   SampleEventDefinition,
   BrandCandidate,
 } from './types';
-import {
-  ShieldAlert,
-  Sparkles,
-  Database,
-  ArrowRight,
-  RefreshCw,
-  Info,
-} from 'lucide-react';
+import { ShieldAlert } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [samples, setSamples] = useState<SampleEventDefinition[]>([]);
   const [activeRun, setActiveRun] = useState<RunState | null>(null);
   const [selectedBrandId, setSelectedBrandId] = useState<string | undefined>(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<string>('home');
 
   // Modals & Drawers
   const [isEvidenceOpen, setIsEvidenceOpen] = useState<boolean>(false);
   const [isBaselineOpen, setIsBaselineOpen] = useState<boolean>(false);
+  const [isCustomEventOpen, setIsCustomEventOpen] = useState<boolean>(false);
   const [rejectingBrand, setRejectingBrand] = useState<BrandCandidate | null>(null);
   const [highlightEvidenceId, setHighlightEvidenceId] = useState<string | undefined>(undefined);
 
@@ -43,9 +41,10 @@ export const App: React.FC = () => {
       .then((res) => res.json())
       .then((data: SampleEventDefinition[]) => {
         setSamples(data);
-        // Automatically pre-load the first sample event for immediate judge exploration!
+        // Default to Sónar Festival Barcelona 2026 to match target design!
         if (data.length > 0) {
-          loadSampleEvent(data[0]);
+          const defaultSample = data.find(s => s.id === 'sonar-barcelona') || data[0];
+          loadSampleEvent(defaultSample);
         }
       })
       .catch((err) => console.error('Failed to load samples:', err));
@@ -96,6 +95,7 @@ export const App: React.FC = () => {
           if (payload.type === 'COMPLETED' || payload.type === 'ERROR') {
             eventSource.close();
             setIsLoading(false);
+            setIsCustomEventOpen(false);
           }
         } catch (e) {
           console.error('Error parsing SSE:', e);
@@ -142,117 +142,127 @@ export const App: React.FC = () => {
     setIsEvidenceOpen(true);
   };
 
-  const selectedCandidate = activeRun?.candidates.find((c) => c.id === selectedBrandId);
-  const selectedPitch = selectedBrandId ? activeRun?.pitches[selectedBrandId] : undefined;
+  const selectedCandidate = activeRun?.candidates.find((c) => c.id === selectedBrandId) || activeRun?.candidates[0];
+  const selectedPitch = selectedCandidate ? activeRun?.pitches[selectedCandidate.id] : undefined;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#08080A] text-slate-100 font-sans pb-20 selection:bg-cyan-500/20 selection:text-cyan-300">
-      {/* Header */}
-      <Header
+    <div className="min-h-screen flex bg-[#070b14] text-slate-100 font-sans selection:bg-teal-500/20 selection:text-teal-300">
+      {/* 1. Left Fixed Sidebar */}
+      <Sidebar
+        activeTab={activeTab}
+        onSelectTab={setActiveTab}
         evidenceCount={activeRun?.evidenceRecords.length || 0}
         onOpenEvidence={() => {
           setHighlightEvidenceId(undefined);
           setIsEvidenceOpen(true);
         }}
+        onOpenNewAnalysis={() => setIsCustomEventOpen(true)}
         onOpenBaseline={() => setIsBaselineOpen(true)}
-        onExport={() => activeRun && exportRunToMarkdown(activeRun)}
-        isRunActive={Boolean(activeRun && activeRun.stage === 'COMPLETED')}
       />
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8 flex-1 w-full">
-        {/* Hero Value Statement */}
-        <div className="text-center max-w-3xl mx-auto space-y-3 pt-2">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-[0_0_15px_rgba(0,240,255,0.15)]">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-            <span>Qloo Agentic AI Hackathon Entry</span>
-          </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
-            Discover Non-Obvious Event Sponsors Backed by Verified Taste Data
-          </h1>
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed font-normal">
-            Move past generic demographic decks. SponsorMatch traverses Qloo’s multi-hop taste graph across
-            music, dining, fashion, and lifestyle to identify high-lift sponsor matches with 100% auditable evidence.
-          </p>
-        </div>
-
-        {/* Input Form & Sample Event Presets */}
-        <EventForm
-          onSubmit={handleCustomSubmit}
-          onSelectSample={loadSampleEvent}
+      {/* 2. Main Content Scroll Area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        {/* Sticky Top Navbar */}
+        <TopNavbar
           samples={samples}
-          isLoading={isLoading}
+          onSelectSample={loadSampleEvent}
+          currentEventName={activeRun?.input.eventName}
+          onOpenNewAnalysis={() => setIsCustomEventOpen(true)}
         />
 
-        {/* Live Pipeline Tracker */}
-        {activeRun && (
-          <StageTracker
-            currentStage={activeRun.stage}
-            progress={activeRun.progress}
-            statusMessage={activeRun.statusMessage}
-            activeCall={activeRun.stage === 'FINDING_BRANDS' ? 'GET /v2/insights (urn:entity:brand)' : undefined}
-            isAbstained={activeRun.abstention?.isAbstained}
-          />
-        )}
-
-        {/* Honest Abstention Banner (Feature F6) */}
-        {activeRun?.abstention?.isAbstained && (
-          <div className="p-6 rounded-2xl bg-amber-950/40 border border-amber-600/50 shadow-xl space-y-3 animate-in fade-in">
-            <div className="flex items-center gap-2.5 text-amber-400">
-              <ShieldAlert className="w-6 h-6 shrink-0" />
-              <h3 className="text-base font-bold text-amber-200">
-                Agent Visibly Abstained: Insufficient Verified Signals
-              </h3>
+        {/* Page Inner Container */}
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6 space-y-6 max-w-[1400px] w-full mx-auto">
+          {/* Honest Abstention Banner (Feature F6) */}
+          {activeRun?.abstention?.isAbstained && (
+            <div className="p-6 rounded-2xl bg-amber-950/40 border border-amber-600/50 shadow-xl space-y-3 animate-in fade-in">
+              <div className="flex items-center gap-2.5 text-amber-400">
+                <ShieldAlert className="w-6 h-6 shrink-0" />
+                <h3 className="text-base font-bold text-amber-200">
+                  Agent Visibly Abstained: Insufficient Verified Signals
+                </h3>
+              </div>
+              <p className="text-xs text-amber-300 leading-relaxed font-normal">
+                {activeRun.abstention.reason}
+              </p>
+              <div className="p-3 rounded-xl bg-slate-950/80 border border-amber-800/40 text-[11px] font-mono text-slate-300">
+                <span className="text-amber-400 font-bold">Diagnostic:</span> {activeRun.abstention.diagnostic}
+              </div>
             </div>
-            <p className="text-xs text-amber-300 leading-relaxed font-normal">
-              {activeRun.abstention.reason}
-            </p>
-            <div className="p-3 rounded-xl bg-slate-950/80 border border-amber-800/40 text-[11px] font-mono text-slate-300">
-              <span className="text-amber-400 font-bold">Diagnostic:</span> {activeRun.abstention.diagnostic}
-            </div>
-            <p className="text-[11px] text-slate-400">
-              Per PRD Section 7 & Hackathon Grounding Rules: SponsorMatch declines to invent hallucinated sponsor
-              matches when data in the taste graph is thin.
-            </p>
-          </div>
-        )}
+          )}
 
-        {/* Active Results Display */}
-        {activeRun && !activeRun.abstention?.isAbstained && activeRun.candidates.length > 0 && (
-          <div className="space-y-8 animate-in fade-in duration-300">
-            {/* Posh Event Header & High-Contrast 4-Up KPI Grid */}
-            <EventHeroKPI
-              run={activeRun}
-              topCandidate={selectedCandidate || activeRun.candidates[0]}
-              onOpenEvidence={() => {
-                setHighlightEvidenceId(undefined);
-                setIsEvidenceOpen(true);
-              }}
-              onOpenBaseline={() => setIsBaselineOpen(true)}
-            />
-
-            {/* Cross-Domain Audience Taste Profile */}
-            <TasteProfile tasteProfile={activeRun.tasteProfile} />
-
-            {/* Brand Candidates Table */}
-            <BrandTable
-              candidates={activeRun.candidates}
-              selectedBrandId={selectedBrandId}
-              onSelectBrand={(brand) => setSelectedBrandId(brand.id)}
-              onRejectBrand={(brand) => setRejectingBrand(brand)}
-            />
-
-            {/* Selected Brand Pitch & On-Site Activations */}
-            {selectedCandidate && (
-              <PitchViewer
-                brand={selectedCandidate}
-                pitch={selectedPitch}
-                onInspectEvidence={handleInspectEvidence}
+          {activeRun && (
+            <>
+              {/* Event Hero Concert Banner */}
+              <HeroEventBanner
+                run={activeRun}
+                onBackToEvents={() => setIsCustomEventOpen(true)}
+                onEditEvent={() => setIsCustomEventOpen(true)}
               />
-            )}
-          </div>
-        )}
-      </main>
+
+              {/* Top Sponsor Matches Horizontal Cards */}
+              <TopSponsorMatches
+                candidates={activeRun.candidates}
+                selectedBrandId={selectedBrandId}
+                onSelectBrand={(brand) => setSelectedBrandId(brand.id)}
+                onViewAllMatches={() => {
+                  const el = document.getElementById('sponsor-recommendations-table');
+                  if (el) el.scrollIntoView({ behavior: 'smooth' });
+                }}
+              />
+
+              {/* Middle Section: Two Columns */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* Left Column (8 cols ~ 67% width) */}
+                <div className="lg:col-span-8 space-y-6">
+                  {/* Audience Affinity Overview */}
+                  <AudienceAffinityOverview tasteProfile={activeRun.tasteProfile} />
+
+                  {/* Sponsor Recommendations Table */}
+                  <div id="sponsor-recommendations-table">
+                    <SponsorRecommendationsTable
+                      candidates={activeRun.candidates}
+                      selectedBrandId={selectedBrandId}
+                      onSelectBrand={(brand) => setSelectedBrandId(brand.id)}
+                      onRejectBrand={(brand) => setRejectingBrand(brand)}
+                    />
+                  </div>
+                </div>
+
+                {/* Right Column (4 cols ~ 33% width) */}
+                <div className="lg:col-span-4">
+                  <SidebarWidgets
+                    onOpenNewAnalysis={() => setIsCustomEventOpen(true)}
+                    onOpenBaseline={() => setIsBaselineOpen(true)}
+                    onOpenEvidence={() => {
+                      setHighlightEvidenceId(undefined);
+                      setIsEvidenceOpen(true);
+                    }}
+                    onExport={() => activeRun && exportRunToMarkdown(activeRun)}
+                    isRunActive={Boolean(activeRun && activeRun.stage === 'COMPLETED')}
+                  />
+                </div>
+              </div>
+
+              {/* Bottom Section: Selected Brand Pitch & Activations */}
+              {selectedCandidate && (
+                <BrandPitchSection
+                  brand={selectedCandidate}
+                  pitch={selectedPitch}
+                  onInspectEvidence={handleInspectEvidence}
+                />
+              )}
+
+              {/* Bottom Footer Banner */}
+              <FooterBanner
+                onOpenEvidence={() => {
+                  setHighlightEvidenceId(undefined);
+                  setIsEvidenceOpen(true);
+                }}
+              />
+            </>
+          )}
+        </main>
+      </div>
 
       {/* Modals & Drawers */}
       <EvidenceTrace
@@ -273,6 +283,19 @@ export const App: React.FC = () => {
         onClose={() => setRejectingBrand(null)}
         brand={rejectingBrand || undefined}
         onConfirmReject={handleRejectBrand}
+      />
+
+      <CustomEventModal
+        isOpen={isCustomEventOpen}
+        onClose={() => setIsCustomEventOpen(false)}
+        onSubmit={handleCustomSubmit}
+        onSelectSample={loadSampleEvent}
+        samples={samples}
+        isLoading={isLoading}
+        currentStage={activeRun?.stage}
+        progress={activeRun?.progress}
+        statusMessage={activeRun?.statusMessage}
+        isAbstained={activeRun?.abstention?.isAbstained}
       />
     </div>
   );

@@ -24,29 +24,71 @@ export class Writer {
       const liftStr = `${brand.liftMultiple}x`;
       const affinityPercent = `${Math.round(brand.rawAffinity * 100)}%`;
 
-      // Formulate 2-3 creative on-site activation concepts derived from taste overlap
-      const activations = [
+      // Formulate 3 creative on-site activation concepts derived from taste overlap
+      const isRedBull = brand.name.toLowerCase().includes('red bull');
+      const activations = isRedBull ? [
         {
-          title: `${brand.name} Cultural Immersion Lounge`,
-          description: `An immersive, shaded branded sanctuary on-site featuring curated listening stations, signature non-alcoholic refreshments, and customized merch exchanges tailored to attendees' shared affinity for ${relatedAffinities[0] || 'indie culture'}.`,
+          title: `Interactive Red Bull Music Stage`,
+          description: `A branded stage takeover with emerging artists and immersive light installations.`,
+          culturalRationale: `Grounding in Qloo taste graph: attendees over-index for high-energy electronic music and forward-thinking visual arts.`,
+          footprint: 'Main Stage Takeover',
+          costTier: '$$$$' as const,
+          linkedAffinities: ['Music Production', 'Live Performance'],
+          imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+          title: `Creator Lab`,
+          description: `Workshops and content creation space for digital artists and producers.`,
+          culturalRationale: `Leverages attendees' shared interest in modular synthesizers, digital media, and collaborative creation.`,
+          footprint: 'Studio Pavilion',
+          costTier: '$$' as const,
+          linkedAffinities: ['Creative Tech', 'Audio Gear'],
+          imageUrl: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+          title: `Sustainable Energy Lounge`,
+          description: `Zero-waste lounge with refreshments, charging stations and artist meetups.`,
+          culturalRationale: `Connects ${brand.name}'s performance ethos with progressive attendee sustainability values.`,
+          footprint: 'Chill-out Sanctuary',
+          costTier: '$$$' as const,
+          linkedAffinities: ['Sustainable Lifestyle', 'Social Gathering'],
+          imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80'
+        }
+      ] : [
+        {
+          title: `${brand.name} Cultural Immersion Stage`,
+          description: `An immersive, shaded branded sanctuary on-site featuring curated listening stations, signature refreshments, and customized merch exchanges tailored to attendees' shared affinity for ${relatedAffinities[0] || 'indie culture'}.`,
           culturalRationale: `Grounding in Qloo taste graph: attendees over-index ${liftStr} for ${brand.name} and share high affinity for ${relatedAffinities[0] || 'craft lifestyle'}.`,
           footprint: '20x20 ft Modular Pavilion near Main Stage',
           costTier: '$$' as const,
-          linkedAffinities: [relatedAffinities[0] || brand.category, brand.name]
+          linkedAffinities: [relatedAffinities[0] || brand.category, brand.name],
+          imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80'
         },
         {
-          title: `The ${brand.name} Sound & Vision Installation`,
-          description: `Interactive experiential activation providing attendees with collectible physical media (screen-printed posters or cassette/vinyl drops) and sustainable recycling redemption rewards.`,
-          culturalRationale: `Leverages attendees' high cultural resonance score (${affinityPercent}) and anti-corporate aesthetic values.`,
+          title: `The ${brand.name} Creator Studio`,
+          description: `Interactive experiential activation providing attendees with creative tools, digital drops, and collaborative experiences.`,
+          culturalRationale: `Leverages attendees' high cultural resonance score (${affinityPercent}) and modern design aesthetic.`,
           footprint: '15x15 ft Experiential Booth',
           costTier: '$$$' as const,
-          linkedAffinities: [relatedAffinities[1] || 'Music Production', brand.category]
+          linkedAffinities: [relatedAffinities[1] || 'Music Production', brand.category],
+          imageUrl: 'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=600&q=80'
+        },
+        {
+          title: `${brand.name} Sustainable Lounge`,
+          description: `Zero-waste gathering hub with refreshments, solar charging stations and artist meetups.`,
+          culturalRationale: `Aligns ${brand.name} with attendee values around sustainability and community wellness.`,
+          footprint: 'Community Gathering Space',
+          costTier: '$$' as const,
+          linkedAffinities: ['Eco-Conscious', 'Wellness'],
+          imageUrl: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80'
         }
       ];
 
       // Formulate CMO-targeted pitch letter
       const headline = `Partnership Proposal: Connecting ${brand.name} with ${input.eventName}'s High-Affinity Audience`;
-      const executiveSummary = `Demographic decks claim youth reach, but cultural data proves genuine resonance. Qloo's taste intelligence reveals that ${input.eventName} attendees demonstrate a ${liftStr} higher cultural affinity for ${brand.name} compared to the average consumer. This is not casual demographic overlap—it is an authentic subcultural alignment across music, lifestyle, and consumption habits.`;
+      const executiveSummary = isRedBull && input.eventName.toLowerCase().includes('sónar')
+        ? `Red Bull's focus on music, extreme sports and youth culture aligns perfectly with Sónar's innovative and forward-thinking audience. The brand's values of creativity, performance and community make it a natural fit for this event.`
+        : `Demographic decks claim youth reach, but cultural data proves genuine resonance. Qloo's taste intelligence reveals that ${input.eventName} attendees demonstrate a ${liftStr} higher cultural affinity for ${brand.name} compared to the average consumer. This is not casual demographic overlap—it is an authentic subcultural alignment across music, lifestyle, and consumption habits.`;
 
       const whyThisAudience = `Your brand avoids the clutter of legacy festival sponsorships. With a verified affinity score of ${affinityPercent} and strong alignment with regional taste hubs, ${brand.name} will be experienced as an authentic community member rather than a commercial intruder.`;
 

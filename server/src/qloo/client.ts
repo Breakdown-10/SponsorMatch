@@ -22,6 +22,8 @@ export interface QlooInsightItem {
     explainability?: Record<string, number>;
   };
   properties?: Record<string, any>;
+  tagline?: string;
+  subTags?: string[];
 }
 
 export interface QlooApiResponse<T = any> {
@@ -431,15 +433,21 @@ export class QlooClient {
 
       if (isElectronic) {
         return [
-          { id: 'b-pioneer-dj', name: 'Pioneer DJ / AlphaTheta', affinity: 0.96, popularity: 0.62, category: 'Pro Audio Equipment' },
-          { id: 'b-teenage-eng', name: 'Teenage Engineering', affinity: 0.92, popularity: 0.44, category: 'Design Audio Gear' },
-          { id: 'b-club-mate', name: 'Club-Mate', affinity: 0.91, popularity: 0.38, category: 'Yerba Mate Soft Drink' },
-          { id: 'b-sennheiser', name: 'Sennheiser Pro Audio', affinity: 0.87, popularity: 0.68, category: 'Headphones & Monitoring' },
-          { id: 'b-monolith', name: 'Native Instruments', affinity: 0.86, popularity: 0.51, category: 'Music Production Tech' },
-          { id: 'b-polestar', name: 'Polestar Electric Vehicles', affinity: 0.83, popularity: 0.49, category: 'Sustainable EV Tech' },
-          { id: 'b-red-bull', name: 'Red Bull', affinity: 0.89, popularity: 0.95, category: 'Energy Drink' },
-          { id: 'b-ableton', name: 'Ableton', affinity: 0.85, popularity: 0.54, category: 'Creative Software' },
-          { id: 'b-acne-studios', name: 'Acne Studios', affinity: 0.79, popularity: 0.57, category: 'Contemporary Fashion' }
+          { id: 'b-red-bull', name: 'Red Bull', affinity: 0.92, popularity: 0.88, category: 'Energy Drinks & Lifestyle', tagline: 'Powering the next generation of cultural innovators.', subTags: ['Music', 'Extreme Sports', 'Youth'] },
+          { id: 'b-spotify', name: 'Spotify', affinity: 0.87, popularity: 0.85, category: 'Music & Audio', tagline: 'Bring your sound to life — beyond the stage.', subTags: ['Music', 'Streaming', 'Gen Z'] },
+          { id: 'b-uniqlo', name: 'Uniqlo', affinity: 0.83, popularity: 0.82, category: 'Fashion & Apparel', tagline: 'Style meets culture, on and off the stage.', subTags: ['Streetwear', 'Sustainability', 'Art'] },
+          { id: 'b-heineken', name: 'Heineken', affinity: 0.81, popularity: 0.80, category: 'Beer & Beverage', tagline: 'Good music. Great moments. Together.', subTags: ['Music', 'Social', 'Nightlife'] },
+          { id: 'b-adobe', name: 'Adobe', affinity: 0.78, popularity: 0.77, category: 'Creative Software', tagline: 'Empowering creators, shaping what\'s next.', subTags: ['Creativity', 'Digital Art', 'Tech'] },
+          { id: 'b-pioneer-dj', name: 'Pioneer DJ / AlphaTheta', affinity: 0.77, popularity: 0.62, category: 'Music & Audio', tagline: 'The gold standard in electronic music performance.', subTags: ['DJ Gear', 'Live Performance', 'Audio'] },
+          { id: 'b-teenage-eng', name: 'Teenage Engineering', affinity: 0.76, popularity: 0.44, category: 'Music & Audio', tagline: 'Playful, precision design for modern musicians.', subTags: ['Synthesizers', 'Design', 'Makers'] },
+          { id: 'b-ableton', name: 'Ableton', affinity: 0.75, popularity: 0.54, category: 'Music & Audio', tagline: 'The creative ecosystem for music production.', subTags: ['DAW', 'Electronic', 'Software'] },
+          { id: 'b-patagonia', name: 'Patagonia', affinity: 0.74, popularity: 0.72, category: 'Fashion & Apparel', tagline: 'Building the best product, causing no unnecessary harm.', subTags: ['Outdoor', 'Eco', 'Apparel'] },
+          { id: 'b-acne-studios', name: 'Acne Studios', affinity: 0.73, popularity: 0.57, category: 'Fashion & Apparel', tagline: 'Contemporary multidisciplinary luxury fashion.', subTags: ['Avant-Garde', 'Design', 'Style'] },
+          { id: 'b-club-mate', name: 'Club-Mate', affinity: 0.72, popularity: 0.38, category: 'Food & Beverage', tagline: 'The iconic Berlin club culture fuel.', subTags: ['Clubbing', 'Yerba Mate', 'Beverage'] },
+          { id: 'b-oatly', name: 'Oatly', affinity: 0.71, popularity: 0.65, category: 'Food & Beverage', tagline: 'Post-milk generation sustainable food.', subTags: ['Plant-Based', 'Eco', 'Cafe'] },
+          { id: 'b-polestar', name: 'Polestar Electric Vehicles', affinity: 0.70, popularity: 0.49, category: 'Technology', tagline: 'The guiding star in sustainable performance tech.', subTags: ['EV', 'Design', 'Innovation'] },
+          { id: 'b-vueling', name: 'Vueling Airlines', affinity: 0.69, popularity: 0.71, category: 'Travel & Lifestyle', tagline: 'Connecting international travelers to Barcelona.', subTags: ['Aviation', 'Travel', 'Europe'] },
+          { id: 'b-w-hotels', name: 'W Hotels Barcelona', affinity: 0.68, popularity: 0.66, category: 'Travel & Lifestyle', tagline: 'Iconic beachfront luxury and nightlife culture.', subTags: ['Hospitality', 'Beach', 'Nightlife'] }
         ];
       }
 
