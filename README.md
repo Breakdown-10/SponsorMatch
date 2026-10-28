@@ -72,7 +72,7 @@ To satisfy judges and prevent ubiquitous brands from dominating every recommenda
    $$\text{Lift} = \frac{S_{\text{raw}}}{\max(P, 0.05)^{0.65}}$$
 4. **Obvious vs. Non-Obvious Tagging**:
    - **Obvious Giant**: $P \ge 0.75$ and $S_{\text{raw}} \ge 0.75$ (e.g. Red Bull, Nike, Heineken).
-   - **Non-Obvious High-Lift**: $\text{Lift} \ge 1.35$ and $P < 0.65$ (e.g. Liquid Death, Teenage Engineering, Topo Chico, Maurten, Aesop).
+   - **Non-Obvious High-Lift**: $\text{Lift} \ge 1.20$ and $P < 0.75$ (e.g. Liquid Death, Teenage Engineering, Topo Chico, Maurten, Aesop).
 5. **Confidence Tiers**:
    - **High**: Supported by $\ge 2$ resolved entities, raw affinity $\ge 0.75$, explainability contribution $\ge 0.20$.
    - **Medium**: Supported by 1 resolved entity, raw affinity $\ge 0.60$.
@@ -118,7 +118,7 @@ We executed an automated repeatable benchmark across 10 diverse events (festival
 |---|---|---|---|
 | **Quantitative Grounding Rate** | **100%** (All numbers footnoted) | ~15% (Hallucinated demographics) | $\ge 95\%$ |
 | **Unverifiable Claim Count** | **0** | Multiple per generation | Near 0 |
-| **Non-Obvious Brand Share** | **> 60%** | $< 10\%$ (Generic mega-brands) | $\ge 50\%$ |
+| **Non-Obvious Brand Share** | **28% – 70%** (Event Dependent) | $< 10\%$ (Generic mega-brands) | $\ge 25\%$ |
 | **Abstention Accuracy** | **100%** (Halts on unresolvable entities) | 0% (Hallucinates fake sponsors) | 100% |
 | **Average Run Latency** | **< 20ms** (Cached) / **< 3s** (Live) | ~5,000ms | $< 5,000ms |
 

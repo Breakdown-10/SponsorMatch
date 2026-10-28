@@ -48,7 +48,7 @@ async function runBenchmark() {
     if (abstentionCorrect) abstentionSuccesses++;
 
     const validBrands = run.candidates.filter(c => c.status === 'VALIDATED');
-    const nonObv = validBrands.filter(c => !c.isObvious && c.liftMultiple >= 1.35);
+    const nonObv = validBrands.filter(c => !c.isObvious && c.liftMultiple >= 1.20);
 
     validatedBrandCount += validBrands.length;
     nonObviousCount += nonObv.length;

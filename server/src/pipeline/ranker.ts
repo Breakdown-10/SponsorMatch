@@ -16,14 +16,14 @@ export class Ranker {
       const popularity = Math.max(0.05, Math.min(1.0, c.generalPopularity));
 
       // Mathematical log-scale popularity normalization
-      // Lift = Raw Affinity / (Popularity ^ 0.50)
-      const rawLift = rawAffinity / Math.pow(popularity, 0.50);
+      // Lift = Raw Affinity / (Popularity ^ 0.65)
+      const rawLift = rawAffinity / Math.pow(popularity, 0.65);
       const liftMultiple = Number(rawLift.toFixed(2));
 
       // Obvious vs. Non-Obvious classification
-      // Obvious: Omnipresent mega-brands (popularity >= 0.95 and high raw affinity >= 0.90)
+      // Obvious: Omnipresent mega-brands (popularity >= 0.75 and high raw affinity >= 0.75)
       // Non-obvious: Challenger and specialized brands whose audience alignment significantly outpaces raw popularity
-      const isObvious = popularity >= 0.95 && rawAffinity >= 0.90;
+      const isObvious = popularity >= 0.75 && rawAffinity >= 0.75;
 
       // Confidence tier determination
       let confidence: ConfidenceTier = 'MEDIUM';
@@ -52,7 +52,7 @@ export class Ranker {
       return (b.matchScore || 0) - (a.matchScore || 0);
     });
 
-    const nonObviousCount = scored.filter(s => !s.isObvious && s.liftMultiple >= 1.35).length;
+    const nonObviousCount = scored.filter(s => !s.isObvious && s.liftMultiple >= 1.20).length;
     const obviousCount = scored.filter(s => s.isObvious).length;
 
     const evidence: EvidenceRecord = {
