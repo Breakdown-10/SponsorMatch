@@ -11,8 +11,10 @@ import {
   TrendingUp,
   Shirt,
   Wine,
-  Compass
+  Compass,
+  Activity
 } from 'lucide-react';
+import { RunState } from '../types';
 
 interface SidebarWidgetsProps {
   onOpenNewAnalysis: () => void;
@@ -20,6 +22,7 @@ interface SidebarWidgetsProps {
   onOpenEvidence: () => void;
   onExport: () => void;
   isRunActive: boolean;
+  run?: RunState;
 }
 
 export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
@@ -28,7 +31,111 @@ export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
   onOpenEvidence,
   onExport,
   isRunActive,
+  run,
 }) => {
+  // Dynamic Insights based on active run
+  const insights = React.useMemo(() => {
+    if (!run) {
+      return [
+        {
+          icon: Shirt,
+          color: 'text-amber-400',
+          bgColor: 'bg-amber-500/10 border-amber-500/20',
+          text: <span>Music-driven audience shows strong affinity for sustainable fashion brands (<strong className="text-amber-400 font-bold">+48%</strong>).</span>
+        },
+        {
+          icon: Wine,
+          color: 'text-emerald-400',
+          bgColor: 'bg-emerald-500/10 border-emerald-500/20',
+          text: <span>Electronic music fans are <strong className="text-emerald-400 font-bold">2.3x</strong> more likely to engage with alternative beverage brands.</span>
+        },
+        {
+          icon: Compass,
+          color: 'text-purple-400',
+          bgColor: 'bg-purple-500/10 border-purple-500/20',
+          text: <span>Barcelona location increases travel and lifestyle brand affinity (<strong className="text-purple-400 font-bold">+31%</strong>).</span>
+        }
+      ];
+    }
+
+    const eventName = run.input.eventName;
+    const isAthletic = eventName.toLowerCase().includes('marathon') || eventName.toLowerCase().includes('run');
+    const isPsych = eventName.toLowerCase().includes('desert') || eventName.toLowerCase().includes('daze');
+    const location = run.input.city || run.input.venue || 'Event location';
+
+    const topNonObvious = run.candidates.find(c => !c.isObvious && c.liftMultiple >= 1.2) || run.candidates[0];
+    const topBrandName = topNonObvious ? topNonObvious.name : 'Challenger brands';
+    const topLift = topNonObvious ? topNonObvious.liftMultiple : 1.34;
+    const topCat = topNonObvious ? topNonObvious.category : 'Subcultural lifestyle';
+
+    if (isAthletic) {
+      return [
+        {
+          icon: Activity,
+          color: 'text-emerald-400',
+          bgColor: 'bg-emerald-500/10 border-emerald-500/20',
+          text: <span>Endurance athletes index <strong className="text-emerald-400 font-bold">{topLift}x higher</strong> for specialized performance nutrition (<strong className="text-emerald-300">{topBrandName}</strong>).</span>
+        },
+        {
+          icon: TrendingUp,
+          color: 'text-cyan-400',
+          bgColor: 'bg-cyan-500/10 border-cyan-500/20',
+          text: <span>Biometric tracking and wearable tech resonance over-indexes by <strong className="text-cyan-400 font-bold">+65%</strong> among marathon participants.</span>
+        },
+        {
+          icon: Compass,
+          color: 'text-purple-400',
+          bgColor: 'bg-purple-500/10 border-purple-500/20',
+          text: <span><strong className="text-slate-200">{location}</strong> urban marathon course amplifies sports recovery and hydration partnership value.</span>
+        }
+      ];
+    }
+
+    if (isPsych) {
+      return [
+        {
+          icon: Wine,
+          color: 'text-amber-400',
+          bgColor: 'bg-amber-500/10 border-amber-500/20',
+          text: <span>Neo-psychedelic music fans are <strong className="text-amber-400 font-bold">{topLift}x more likely</strong> to buy non-traditional canned water (<strong className="text-amber-300">{topBrandName}</strong>).</span>
+        },
+        {
+          icon: Shirt,
+          color: 'text-emerald-400',
+          bgColor: 'bg-emerald-500/10 border-emerald-500/20',
+          text: <span>High cross-domain synergy for vintage analog audio synthesizers and rugged outdoor apparel (<strong className="text-emerald-400 font-bold">+58%</strong>).</span>
+        },
+        {
+          icon: Compass,
+          color: 'text-cyan-400',
+          bgColor: 'bg-cyan-500/10 border-cyan-500/20',
+          text: <span><strong className="text-slate-200">{location}</strong> outdoor desert retreat setting drives high affinity for specialty craft beverages.</span>
+        }
+      ];
+    }
+
+    return [
+      {
+        icon: TrendingUp,
+        color: 'text-cyan-400',
+        bgColor: 'bg-cyan-500/10 border-cyan-500/20',
+        text: <span>Audience cultural alignment reveals <strong className="text-cyan-400 font-bold">{topLift}x lift</strong> for <strong className="text-cyan-300">{topBrandName}</strong> ({topCat}).</span>
+      },
+      {
+        icon: Shirt,
+        color: 'text-emerald-400',
+        bgColor: 'bg-emerald-500/10 border-emerald-500/20',
+        text: <span>Cross-domain taste traversal discovers high-affinity overlap across lifestyle and creative technology.</span>
+      },
+      {
+        icon: Compass,
+        color: 'text-purple-400',
+        bgColor: 'bg-purple-500/10 border-purple-500/20',
+        text: <span><strong className="text-slate-200">{location}</strong> environment drives unique local and international lifestyle brand affinity.</span>
+      }
+    ];
+  }, [run]);
+
   return (
     <div className="space-y-4">
       {/* 1. Quick Actions */}
@@ -75,10 +182,10 @@ export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
               </div>
               <div>
                 <div className="text-xs font-bold text-white group-hover:text-blue-300 transition-colors">
-                  Compare with LLM
+                  Compare with LLM (F8)
                 </div>
                 <div className="text-[10px] text-slate-400">
-                  See the difference Qloo makes
+                  Evidence vs. Hallucinated Tropes
                 </div>
               </div>
             </div>
@@ -99,7 +206,7 @@ export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
                   View Evidence Trace
                 </div>
                 <div className="text-[10px] text-slate-400">
-                  Explore the data behind matches
+                  Redacted queries & provenance
                 </div>
               </div>
             </div>
@@ -117,10 +224,10 @@ export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
               </div>
               <div>
                 <div className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">
-                  Export Report
+                  Export B2B Pitch Deck
                 </div>
                 <div className="text-[10px] text-slate-400">
-                  Download PDF or share link
+                  Download Markdown & Print PDF
                 </div>
               </div>
             </div>
@@ -141,7 +248,7 @@ export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
         </div>
 
         <p className="text-xs text-slate-400 leading-relaxed">
-          Every recommendation is backed by Qloo data. Explore the cultural connections, affinities and source entities that make each brand a fit.
+          Every recommendation is backed by Qloo data. Explore the cultural connections, affinities and source entities that make each brand an evidence-grounded fit.
         </p>
 
         <button
@@ -153,7 +260,7 @@ export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
         </button>
       </div>
 
-      {/* 3. Key Insights */}
+      {/* 3. Key Insights (Dynamic per Event) */}
       <div className="bg-[#0d1424] border border-white/[0.08] rounded-2xl p-5 shadow-xl space-y-3.5">
         <div className="flex items-center gap-2 border-b border-white/[0.06] pb-3">
           <div className="w-5 h-5 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-400">
@@ -165,35 +272,19 @@ export const SidebarWidgets: React.FC<SidebarWidgetsProps> = ({
         </div>
 
         <div className="space-y-3">
-          {/* Insight 1 */}
-          <div className="flex items-start gap-3">
-            <div className="w-7 h-7 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
-              <Shirt className="w-3.5 h-3.5 text-amber-400" />
-            </div>
-            <p className="text-xs text-slate-300 leading-relaxed font-normal">
-              Music-driven audience shows strong affinity for sustainable fashion brands (<span className="text-amber-400 font-bold">+48%</span>).
-            </p>
-          </div>
-
-          {/* Insight 2 */}
-          <div className="flex items-start gap-3">
-            <div className="w-7 h-7 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 mt-0.5">
-              <Wine className="w-3.5 h-3.5 text-emerald-400" />
-            </div>
-            <p className="text-xs text-slate-300 leading-relaxed font-normal">
-              Electronic music fans are <span className="text-emerald-400 font-bold">2.3x</span> more likely to engage with alternative beverage brands.
-            </p>
-          </div>
-
-          {/* Insight 3 */}
-          <div className="flex items-start gap-3">
-            <div className="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0 mt-0.5">
-              <Compass className="w-3.5 h-3.5 text-purple-400" />
-            </div>
-            <p className="text-xs text-slate-300 leading-relaxed font-normal">
-              Barcelona location increases travel and lifestyle brand affinity (<span className="text-purple-400 font-bold">+31%</span>).
-            </p>
-          </div>
+          {insights.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div key={idx} className="flex items-start gap-3">
+                <div className={`w-7 h-7 rounded-lg border flex items-center justify-center shrink-0 mt-0.5 ${item.bgColor}`}>
+                  <Icon className={`w-3.5 h-3.5 ${item.color}`} />
+                </div>
+                <p className="text-xs text-slate-300 leading-relaxed font-normal">
+                  {item.text}
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

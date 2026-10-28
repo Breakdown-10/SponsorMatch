@@ -215,7 +215,11 @@ export const App: React.FC = () => {
                 {/* Left Column (8 cols ~ 67% width) */}
                 <div className="lg:col-span-8 space-y-6">
                   {/* Audience Affinity Overview */}
-                  <AudienceAffinityOverview tasteProfile={activeRun.tasteProfile} />
+                  <AudienceAffinityOverview
+                    tasteProfile={activeRun.tasteProfile}
+                    candidates={activeRun.candidates}
+                    eventName={activeRun.input.eventName}
+                  />
 
                   {/* Sponsor Recommendations Table */}
                   <div id="sponsor-recommendations-table">
@@ -239,6 +243,7 @@ export const App: React.FC = () => {
                     }}
                     onExport={() => activeRun && exportRunToMarkdown(activeRun)}
                     isRunActive={Boolean(activeRun && activeRun.stage === 'COMPLETED')}
+                    run={activeRun}
                   />
                 </div>
               </div>
@@ -249,6 +254,8 @@ export const App: React.FC = () => {
                   brand={selectedCandidate}
                   pitch={selectedPitch}
                   onInspectEvidence={handleInspectEvidence}
+                  onRejectBrand={(brand) => setRejectingBrand(brand)}
+                  eventName={activeRun.input.eventName}
                 />
               )}
 
