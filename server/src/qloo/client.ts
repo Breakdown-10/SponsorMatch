@@ -308,12 +308,23 @@ export class QlooClient {
           ? item.affinity
           : 0.75 - idx * 0.02;
 
+        const category = (item.properties?.industries && Array.isArray(item.properties.industries) && item.properties.industries.length > 0)
+          ? item.properties.industries.join(' / ')
+          : item.category || (item.subtype === 'urn:entity:brand' ? 'Consumer Brand' : item.subtype) || (params.filterType.includes('brand') ? 'Consumer Brand' : 'Cultural Entity');
+
+        const tagline = item.properties?.tagline || item.properties?.short_description || undefined;
+        const subTags = (item.properties?.keywords && Array.isArray(item.properties.keywords))
+          ? item.properties.keywords.slice(0, 4)
+          : (Array.isArray(item.tags) ? item.tags.slice(0, 3).map((t: any) => t.name || t) : undefined);
+
         return {
           id: item.entity_id || item.id || item.qloo_id || `item-${idx}`,
           name: item.name || item.title || `Entity ${idx + 1}`,
           affinity: rawScore,
           popularity: typeof item.popularity === 'number' ? item.popularity : 0.5,
-          category: item.category || (item.subtype === 'urn:entity:brand' ? 'Consumer Brand' : item.subtype) || (params.filterType.includes('brand') ? 'Consumer Brand' : 'Cultural Entity'),
+          category,
+          tagline,
+          subTags,
           query: item.query,
           properties: item.properties,
         };
