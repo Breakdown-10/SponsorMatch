@@ -1,4 +1,5 @@
 import React from 'react';
+import sponsorMatchIcon from '../assets/SponsorMatchAI_icon.jpg';
 import { Target, ShieldCheck, Database, FileDown, Sparkles } from 'lucide-react';
 
 interface HeaderProps {
@@ -21,8 +22,8 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand identity */}
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#14151E] border border-cyan-500/30 flex items-center justify-center shadow-glow-cyan">
-            <Target className="w-4 h-4 text-cyan-400" />
+          <div className="w-9 h-9 rounded-xl overflow-hidden border border-cyan-500/40 shadow-glow-cyan shrink-0 bg-[#080d1a]">
+            <img src={sponsorMatchIcon} alt="SponsorMatch AI" className="w-full h-full object-cover" />
           </div>
           <div>
             <div className="flex items-center gap-2">

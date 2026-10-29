@@ -187,3 +187,31 @@ export interface SampleEventDefinition {
   genre: string;
   description: string;
 }
+
+export type CustomerRole = 'organizer' | 'venue' | 'agency' | 'judge';
+
+export interface UserPreferences {
+  defaultCurrency: string;
+  targetDealSize: string;
+  discoveryStrategy: 'challenger_heavy' | 'balanced' | 'prestige_luxury';
+  pitchTone: 'executive' | 'creative_subculture' | 'experiential';
+  defaultExcludedCategories: string[];
+  showConfidenceScores: boolean;
+  autoExpandHighLift: boolean;
+  notificationsEnabled: boolean;
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  title: string;
+  organization: string;
+  email: string;
+  role: CustomerRole;
+  avatarColor: string;
+  avatarInitials: string;
+  customAvatarUrl?: string;
+  preferences: UserPreferences;
+  onboardingCompleted: boolean;
+  onboardingCompletedAt?: string;
+}

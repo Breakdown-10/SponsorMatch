@@ -7,6 +7,7 @@ interface EventFormProps {
   onSelectSample: (sample: SampleEventDefinition) => void;
   samples: SampleEventDefinition[];
   isLoading: boolean;
+  defaultExclusions?: string[];
 }
 
 export const EventForm: React.FC<EventFormProps> = ({
@@ -14,6 +15,7 @@ export const EventForm: React.FC<EventFormProps> = ({
   onSelectSample,
   samples,
   isLoading,
+  defaultExclusions,
 }) => {
   const [eventName, setEventName] = useState('');
   const [entityInput, setEntityInput] = useState('');
@@ -22,7 +24,7 @@ export const EventForm: React.FC<EventFormProps> = ({
   const [city, setCity] = useState('');
   const [budgetTier, setBudgetTier] = useState<'BUDGET' | 'MID' | 'PREMIUM'>('MID');
   const [exclusionInput, setExclusionInput] = useState('');
-  const [excludedCategories, setExcludedCategories] = useState<string[]>([]);
+  const [excludedCategories, setExcludedCategories] = useState<string[]>(defaultExclusions || []);
 
   const handleAddEntity = () => {
     if (entityInput.trim() && !entities.includes(entityInput.trim())) {

@@ -12,14 +12,24 @@ import { EvidenceTrace } from './components/EvidenceTrace';
 import { BaselineModal } from './components/BaselineModal';
 import { RejectModal } from './components/RejectModal';
 import { CustomEventModal } from './components/CustomEventModal';
+import { OnboardingModal } from './components/OnboardingModal';
+import { ProfileModal } from './components/ProfileModal';
 import { exportRunToMarkdown } from './utils/export';
 import {
   EventInput,
   RunState,
   SampleEventDefinition,
   BrandCandidate,
+  UserProfile,
 } from './types';
-import { ShieldAlert } from 'lucide-react';
+import {
+  getStoredProfile,
+  saveStoredProfile,
+  resetStoredProfile,
+  hasCompletedOnboarding,
+  setOnboardingCompleted,
+} from './utils/profileStorage';
+import { ShieldAlert, CheckCircle2, Sparkles, X } from 'lucide-react';
 
 export const App: React.FC = () => {
   const [samples, setSamples] = useState<SampleEventDefinition[]>([]);
@@ -34,6 +44,53 @@ export const App: React.FC = () => {
   const [isCustomEventOpen, setIsCustomEventOpen] = useState<boolean>(false);
   const [rejectingBrand, setRejectingBrand] = useState<BrandCandidate | null>(null);
   const [highlightEvidenceId, setHighlightEvidenceId] = useState<string | undefined>(undefined);
+
+  // Customer Profile & Onboarding State
+  const [userProfile, setUserProfile] = useState<UserProfile>(() => getStoredProfile());
+  const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const triggerToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage((cur) => (cur === msg ? null : cur));
+    }, 4000);
+  };
+
+  const handleSaveProfile = (updated: UserProfile) => {
+    setUserProfile(updated);
+    saveStoredProfile(updated);
+    triggerToast('Profile & preferences updated successfully!');
+  };
+
+  const handleResetProfile = () => {
+    const defaultProfile = resetStoredProfile();
+    setUserProfile(defaultProfile);
+    triggerToast('Reset to default demo organizer profile.');
+  };
+
+  const handleCompleteOnboarding = (updated: UserProfile) => {
+    setUserProfile(updated);
+    saveStoredProfile(updated);
+    setOnboardingCompleted(true);
+    triggerToast(`Welcome to SponsorMatch AI, ${updated.name}!`);
+  };
+
+  const handleCloseOnboarding = () => {
+    setIsOnboardingOpen(false);
+    setOnboardingCompleted(true);
+  };
+
+  // Check onboarding tour on initial visit
+  useEffect(() => {
+    if (!hasCompletedOnboarding()) {
+      const timer = setTimeout(() => {
+        setIsOnboardingOpen(true);
+      }, 700);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   // Fetch pre-warmed samples on mount
   useEffect(() => {
@@ -52,6 +109,7 @@ export const App: React.FC = () => {
 
   const loadSampleEvent = async (sample: SampleEventDefinition) => {
     setIsLoading(true);
+    setHighlightEvidenceId(undefined);
     try {
       const res = await fetch(`/api/runs/sample-${sample.id}`);
       if (res.ok) {
@@ -70,6 +128,7 @@ export const App: React.FC = () => {
   const handleCustomSubmit = async (input: EventInput) => {
     setIsLoading(true);
     setActiveRun(null);
+    setHighlightEvidenceId(undefined);
 
     try {
       // 1. Create Run
@@ -158,6 +217,8 @@ export const App: React.FC = () => {
         }}
         onOpenNewAnalysis={() => setIsCustomEventOpen(true)}
         onOpenBaseline={() => setIsBaselineOpen(true)}
+        userProfile={userProfile}
+        onOpenProfile={() => setIsProfileOpen(true)}
       />
 
       {/* 2. Main Content Scroll Area */}
@@ -168,6 +229,9 @@ export const App: React.FC = () => {
           onSelectSample={loadSampleEvent}
           currentEventName={activeRun?.input.eventName}
           onOpenNewAnalysis={() => setIsCustomEventOpen(true)}
+          userProfile={userProfile}
+          onOpenProfile={() => setIsProfileOpen(true)}
+          onResetProfile={handleResetProfile}
         />
 
         {/* Page Inner Container */}
@@ -256,6 +320,7 @@ export const App: React.FC = () => {
                   onInspectEvidence={handleInspectEvidence}
                   onRejectBrand={(brand) => setRejectingBrand(brand)}
                   eventName={activeRun.input.eventName}
+                  userProfile={userProfile}
                 />
               )}
 
@@ -303,7 +368,41 @@ export const App: React.FC = () => {
         progress={activeRun?.progress}
         statusMessage={activeRun?.statusMessage}
         isAbstained={activeRun?.abstention?.isAbstained}
+        defaultExclusions={userProfile.preferences.defaultExcludedCategories}
       />
+
+      {/* Profile Customization Modal */}
+      <ProfileModal
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        currentProfile={userProfile}
+        onSaveProfile={handleSaveProfile}
+        onResetProfile={handleResetProfile}
+      />
+
+      {/* Customer Onboarding Wizard (One-time only for first-time users) */}
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onClose={handleCloseOnboarding}
+        currentProfile={userProfile}
+        onSaveProfile={handleCompleteOnboarding}
+        samples={samples}
+        onSelectSample={loadSampleEvent}
+      />
+
+      {/* Toast Notification Alert */}
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-[#0c1628] border border-teal-500/40 text-teal-300 text-xs font-bold shadow-2xl animate-in slide-in-from-bottom-3 duration-200">
+          <Sparkles className="w-4 h-4 text-teal-400 shrink-0" />
+          <span>{toastMessage}</span>
+          <button
+            onClick={() => setToastMessage(null)}
+            className="ml-2 text-slate-400 hover:text-white"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

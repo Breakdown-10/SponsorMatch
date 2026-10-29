@@ -14,7 +14,7 @@ import {
   Award,
   Mail
 } from 'lucide-react';
-import { BrandCandidate, BrandPitch } from '../types';
+import { BrandCandidate, BrandPitch, UserProfile } from '../types';
 import { BrandLogo } from './BrandLogos';
 
 interface BrandPitchSectionProps {
@@ -23,6 +23,7 @@ interface BrandPitchSectionProps {
   onInspectEvidence?: (evidenceId: string) => void;
   onRejectBrand?: (brand: BrandCandidate) => void;
   eventName?: string;
+  userProfile?: UserProfile;
 }
 
 type SponsorshipTierKey = 'TITLE' | 'STAGE' | 'OFFICIAL' | 'VIP';
@@ -43,6 +44,7 @@ export const BrandPitchSection: React.FC<BrandPitchSectionProps> = ({
   onInspectEvidence,
   onRejectBrand,
   eventName = 'This Event',
+  userProfile,
 }) => {
   const [copiedPitch, setCopiedPitch] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -169,8 +171,9 @@ ${footnotesText}
 We would love to share the full Qloo evidence ledger and explore tailored activations with your team. Do you have 15 minutes this week for a brief conversation?
 
 Best regards,
-Partnerships & Brand Strategy Team
-${eventName}`;
+${userProfile?.name || 'Jamie Davenport'}
+${userProfile?.title || 'Director of Strategic Sponsorships'}${userProfile?.organization ? ` | ${userProfile.organization}` : ` | ${eventName}`}
+${userProfile?.email ? `Contact: ${userProfile.email}` : ''}`;
 
     navigator.clipboard.writeText(emailTemplate);
     setCopiedEmail(true);

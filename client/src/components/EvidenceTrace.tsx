@@ -30,15 +30,22 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
   const [stageFilter, setStageFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
 
+  // Reset or adjust selection whenever drawer opens or active evidenceRecords change
   useEffect(() => {
-    if (highlightId) {
-      setExpandedId(highlightId);
-      const item = evidenceRecords.find((e) => e.id === highlightId);
-      if (item && stageFilter !== 'ALL' && item.stage !== stageFilter) {
-        setStageFilter('ALL');
+    if (isOpen) {
+      if (highlightId) {
+        const item = evidenceRecords.find((e) => e.id === highlightId);
+        if (item) {
+          setExpandedId(highlightId);
+          setStageFilter('ALL');
+          return;
+        }
       }
+      setExpandedId(null);
+      setStageFilter('ALL');
+      setSearchQuery('');
     }
-  }, [highlightId, evidenceRecords]);
+  }, [isOpen, highlightId, evidenceRecords]);
 
   // Handle ESC key to close
   useEffect(() => {
@@ -53,9 +60,33 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
 
   if (!isOpen) return null;
 
+  const stages = [
+    { key: 'ALL', label: 'All Queries' },
+    { key: 'PLANNING', label: 'Plan' },
+    { key: 'RESOLVING', label: 'Resolve' },
+    { key: 'PROFILING', label: 'Profile' },
+    { key: 'FINDING_BRANDS', label: 'Brands' },
+    { key: 'RANKING', label: 'Rank' },
+    { key: 'VALIDATING', label: 'Guardrails' },
+    { key: 'WRITING', label: 'Pitch' },
+    { key: 'AUDITING', label: 'Audit' },
+  ];
+
+  const getStageCount = (stageKey: string) => {
+    if (stageKey === 'ALL') return evidenceRecords.length;
+    return evidenceRecords.filter((ev) => {
+      const s = (ev.stage || '').toUpperCase();
+      const target = stageKey.toUpperCase();
+      return s === target || s.startsWith(target) || target.startsWith(s);
+    }).length;
+  };
+
   const filteredRecords = evidenceRecords.filter((ev) => {
-    if (stageFilter !== 'ALL' && ev.stage !== stageFilter) {
-      return false;
+    if (stageFilter !== 'ALL') {
+      const s = (ev.stage || '').toUpperCase();
+      const target = stageFilter.toUpperCase();
+      const matches = s === target || s.startsWith(target) || target.startsWith(s);
+      if (!matches) return false;
     }
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -64,18 +95,6 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
     }
     return true;
   });
-
-  const stages = [
-    { key: 'ALL', label: 'All Queries' },
-    { key: 'PLANNING', label: 'Plan' },
-    { key: 'RESOLVING_ENTITIES', label: 'Resolve' },
-    { key: 'PROFILING_AUDIENCE', label: 'Profile' },
-    { key: 'FINDING_BRANDS', label: 'Brands' },
-    { key: 'RANKING', label: 'Rank' },
-    { key: 'VALIDATING', label: 'Guardrails' },
-    { key: 'WRITING', label: 'Pitch' },
-    { key: 'AUDITING', label: 'Audit' },
-  ];
 
   return (
     <div
@@ -135,21 +154,29 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
               )}
             </div>
 
-            {/* Stage filter pills */}
+            {/* Stage filter pills with live counts */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] scrollbar-none">
-              {stages.map((st) => (
-                <button
-                  key={st.key}
-                  onClick={() => setStageFilter(st.key)}
-                  className={`px-2.5 py-1 rounded-lg font-bold shrink-0 transition-colors ${
-                    stageFilter === st.key
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-glow-cyan'
-                      : 'bg-[#0A0B10] text-slate-400 border border-white/[0.06] hover:text-white'
-                  }`}
-                >
-                  {st.label}
-                </button>
-              ))}
+              {stages.map((st) => {
+                const count = getStageCount(st.key);
+                return (
+                  <button
+                    key={st.key}
+                    onClick={() => setStageFilter(st.key)}
+                    className={`px-2.5 py-1 rounded-lg font-bold shrink-0 transition-colors flex items-center gap-1.5 ${
+                      stageFilter === st.key
+                        ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 shadow-glow-cyan'
+                        : 'bg-[#0A0B10] text-slate-400 border border-white/[0.06] hover:text-white'
+                    }`}
+                  >
+                    <span>{st.label}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                      stageFilter === st.key ? 'bg-cyan-400/25 text-cyan-200' : 'bg-white/[0.06] text-slate-500'
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -178,18 +205,18 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                     <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#0A0B10] text-slate-300 border border-white/[0.08]">
                       {ev.toolName}
                     </span>
-                    <span className="text-xs font-bold text-white truncate max-w-[280px]">
+                    <span className="text-xs font-bold text-white truncate max-w-[260px]">
                       {ev.resultSummary}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-2">
                     {ev.cacheHit ? (
-                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                        Cache Hit
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30">
+                        Cached
                       </span>
                     ) : (
-                      <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30">
                         Live API
                       </span>
                     )}
@@ -201,41 +228,43 @@ export const EvidenceTrace: React.FC<EvidenceTraceProps> = ({
                   </div>
                 </div>
 
+                {/* Expanded Details */}
                 {isExpanded && (
-                  <div className="p-3.5 pt-0 border-t border-white/[0.04] text-xs space-y-2.5 mt-1 font-mono">
-                    <div>
-                      <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">
-                        Endpoint & Method:
+                  <div className="p-4 border-t border-white/[0.06] bg-[#0A0B10] space-y-3 text-xs">
+                    {/* Endpoint & Timestamp */}
+                    <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
+                      <div>
+                        <span className="text-slate-500 block">Endpoint:</span>
+                        <span className="text-cyan-300 break-all">{ev.endpoint}</span>
                       </div>
-                      <div className="p-2 rounded-lg bg-[#0A0B10] border border-white/[0.06] text-cyan-300 break-all">
-                        {ev.endpoint}
+                      <div>
+                        <span className="text-slate-500 block">Timestamp:</span>
+                        <span className="text-slate-300">{new Date(ev.timestamp).toLocaleTimeString()}</span>
                       </div>
                     </div>
 
+                    {/* Redacted Parameters */}
                     <div>
-                      <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">
-                        Redacted Parameters:
+                      <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                        <CheckCircle className="w-3 h-3 text-emerald-400" />
+                        <span>Redacted Parameters (Credential Isolated)</span>
                       </div>
-                      <pre className="p-2.5 rounded-lg bg-[#0A0B10] border border-white/[0.06] text-slate-300 text-[11px] overflow-x-auto">
+                      <pre className="p-2.5 rounded-lg bg-[#07080B] text-slate-300 text-[11px] font-mono overflow-x-auto border border-white/[0.04]">
                         {JSON.stringify(ev.redactedParams, null, 2)}
                       </pre>
                     </div>
 
+                    {/* Raw Snippet */}
                     {ev.rawSnippet && (
                       <div>
-                        <div className="text-[10px] text-slate-500 uppercase tracking-wider font-bold mb-1">
-                          Verified Output Snippet:
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                          API Response Snippet ({ev.resultCount} entities)
                         </div>
-                        <pre className="p-2.5 rounded-lg bg-[#0A0B10] border border-white/[0.06] text-slate-300 text-[11px] overflow-x-auto max-h-48">
+                        <pre className="p-2.5 rounded-lg bg-[#07080B] text-slate-300 text-[11px] font-mono overflow-x-auto max-h-40 border border-white/[0.04]">
                           {JSON.stringify(ev.rawSnippet, null, 2)}
                         </pre>
                       </div>
                     )}
-
-                    <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-                      <span>ID: {ev.id}</span>
-                      <span>Logged: {new Date(ev.timestamp).toLocaleTimeString()}</span>
-                    </div>
                   </div>
                 )}
               </div>

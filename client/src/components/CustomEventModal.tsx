@@ -1,4 +1,5 @@
 import React from 'react';
+import sponsorMatchIcon from '../assets/SponsorMatchAI_icon.jpg';
 import { X, Sparkles, Sliders } from 'lucide-react';
 import { EventForm } from './EventForm';
 import { StageTracker } from './StageTracker';
@@ -15,6 +16,7 @@ interface CustomEventModalProps {
   progress?: number;
   statusMessage?: string;
   isAbstained?: boolean;
+  defaultExclusions?: string[];
 }
 
 export const CustomEventModal: React.FC<CustomEventModalProps> = ({
@@ -28,6 +30,7 @@ export const CustomEventModal: React.FC<CustomEventModalProps> = ({
   progress = 0,
   statusMessage = '',
   isAbstained = false,
+  defaultExclusions,
 }) => {
   if (!isOpen) return null;
 
@@ -37,8 +40,8 @@ export const CustomEventModal: React.FC<CustomEventModalProps> = ({
         {/* Modal Header */}
         <div className="p-5 sm:p-6 border-b border-white/[0.08] flex items-center justify-between bg-[#090e1c]">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-500/40 flex items-center justify-center text-teal-400">
-              <Sparkles className="w-5 h-5 fill-teal-400" />
+            <div className="w-9 h-9 rounded-xl overflow-hidden border border-teal-500/40 shrink-0 bg-[#080d1a] shadow-sm">
+              <img src={sponsorMatchIcon} alt="SponsorMatch AI" className="w-full h-full object-cover" />
             </div>
             <div>
               <h3 className="text-base font-extrabold text-white">
@@ -83,6 +86,7 @@ export const CustomEventModal: React.FC<CustomEventModalProps> = ({
             }}
             samples={samples}
             isLoading={isLoading}
+            defaultExclusions={defaultExclusions}
           />
         </div>
       </div>

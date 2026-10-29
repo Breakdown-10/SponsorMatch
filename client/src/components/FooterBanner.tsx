@@ -1,4 +1,5 @@
 import React from 'react';
+import sponsorMatchIcon from '../assets/SponsorMatchAI_icon.jpg';
 import { Sparkles, FileSearch, ArrowRight } from 'lucide-react';
 
 interface FooterBannerProps {
@@ -10,8 +11,8 @@ export const FooterBanner: React.FC<FooterBannerProps> = ({ onOpenEvidence }) =>
     <footer className="mt-12 bg-[#090d1a] border border-white/[0.08] rounded-2xl p-4 sm:p-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-400 shadow-xl">
       {/* Left Branding */}
       <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center text-teal-400 shrink-0">
-          <Sparkles className="w-4 h-4 fill-teal-400" />
+        <div className="w-8 h-8 rounded-xl overflow-hidden border border-teal-500/30 shrink-0 bg-[#080d1a] shadow-sm">
+          <img src={sponsorMatchIcon} alt="SponsorMatch AI" className="w-full h-full object-cover" />
         </div>
         <div>
           <div className="text-xs font-bold text-white">
