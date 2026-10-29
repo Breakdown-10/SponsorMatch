@@ -132,7 +132,7 @@ We executed an automated repeatable benchmark across 10 diverse events (festival
 
 ### Step 1: Clone Repository
 ```bash
-git clone https://github.com/your-username/SponsorMatch.git
+git clone https://github.com/Breakdown-10/SponsorMatch.git
 cd SponsorMatch
 ```
 
